@@ -1,4 +1,5 @@
-FROM armhf/alpine:3.4
+FROM arm64v8/alpine:latest
+# FROM armhf/alpine:3.4
 MAINTAINER docker@intrepid.de
 
 RUN apk add --no-cache mosquitto-clients bc bash
