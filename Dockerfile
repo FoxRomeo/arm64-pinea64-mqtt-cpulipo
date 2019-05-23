@@ -1,8 +1,11 @@
 FROM arm64v8/alpine:latest
-# FROM armhf/alpine:3.4
 MAINTAINER docker@intrepid.de
 
-RUN apk add --no-cache mosquitto-clients bc bash
+RUN passwd -l root ; \
+    apk --no-cache --update --upgrade add \
+      mosquitto-clients \
+      bc \
+      bash
 
 COPY push-mqtt.sh /opt/push-mqtt.sh
 
