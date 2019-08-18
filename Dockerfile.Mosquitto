@@ -1,4 +1,4 @@
-FROM multiarch/debian-debootstrap:arm64-stretch
+FROM multiarch/debian-debootstrap:arm64-buster
 MAINTAINER docker@intrepid.de
 
 #FROM arm64v8/alpine:latest
