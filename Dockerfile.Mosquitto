@@ -13,7 +13,7 @@ COPY push-mqtt.sh /opt/push-mqtt.sh
 RUN passwd -l root ; \
     apt-get update && \
     apt-get install -yq bash apt-transport-https curl gnupg && \
-    apt-get install -yq openssl build-essential libssl-dev libc-ares-dev libwebsockets-dev && \
+    apt-get install -yq openssl bc build-essential libssl-dev libc-ares-dev libwebsockets-dev && \
     mkdir -p /usr/src ; \
     cd /usr/src && \
     wget https://mosquitto.org/files/source/mosquitto-${MOSQUITTOVERSION}.tar.gz && \
