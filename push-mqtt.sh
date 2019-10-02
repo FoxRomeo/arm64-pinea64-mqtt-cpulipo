@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #    Copyright (C) 2016  Oliver Faßbender
-#	 docker@intrepid.de
+#    docker@intrepid.de
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,11 +23,11 @@ while true; do
 
   /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Temp $MQTTPARAMETER -m "`echo $(( $(grep 'POWER_SUPPLY_TEMP' /sys/class/power_supply/battery/uevent | cut -d= -f2 ) / 10 ))`" &> /dev/null
 
-  /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Min $MQTTPARAMETER -m "`echo "$(grep 'POWER_SUPPLY_VOLTAGE_MIN_DESIGN' /sys/class/power_supply/battery/uevent | cut -d= -f2 ) / 1000" | bc -l | sed s/\"\.\"/\",\"/ `" &> /dev/null
+  /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Min $MQTTPARAMETER -m "`echo "$(grep 'POWER_SUPPLY_VOLTAGE_MIN_DESIGN' /sys/class/power_supply/battery/uevent | cut -d= -f2 ) / 1000" | bc -l `" &> /dev/null
 
-  /usr/local/bin/mosquitto_pub -h $MQTTBROKER -P $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Max $MQTTPARAMETER -m "`echo "$(grep 'POWER_SUPPLY_VOLTAGE_MAX_DESIGN' /sys/class/power_supply/battery/uevent | cut -d= -f2 ) / 1000000" | bc -l | sed s/\"\.\"/\",\"/ `" &> /dev/null
+  /usr/local/bin/mosquitto_pub -h $MQTTBROKER -P $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Max $MQTTPARAMETER -m "`echo "$(grep 'POWER_SUPPLY_VOLTAGE_MAX_DESIGN' /sys/class/power_supply/battery/uevent | cut -d= -f2 ) / 1000000" | bc -l `" &> /dev/null
 
-  /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Volt $MQTTPARAMETER -m "`echo "$(grep 'POWER_SUPPLY_VOLTAGE_NOW' /sys/class/power_supply/battery/uevent | cut -d= -f2 ) / 1000000" | bc -l | sed s/\"\.\"/\",\"/ `" &> /dev/null
+  /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Volt $MQTTPARAMETER -m "`echo "$(grep 'POWER_SUPPLY_VOLTAGE_NOW' /sys/class/power_supply/battery/uevent | cut -d= -f2 ) / 1000000" | bc -l `" &> /dev/null
 
   /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Prozent $MQTTPARAMETER -m "`echo $(( $(grep 'POWER_SUPPLY_CAPACITY' /sys/class/power_supply/battery/uevent | cut -d= -f2 ) ))`" &> /dev/null
 
