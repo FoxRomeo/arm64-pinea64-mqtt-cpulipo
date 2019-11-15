@@ -11,10 +11,10 @@ pipeline {
                 timestamps()
         }
         environment {
-                REGISTRY = "nexus.intrepid.local:4000"
+                REGISTRY = "intrepidde"
                 EMAIL_TO = 'olli.jenkins.prometheus@intrepid.de'
                 NAME = "arm64-pinea64-mqtt-cpulipo"
-		SECONDARYREGISTRY = "intrepidde"
+		SECONDARYREGISTRY = "nexus.intrepid.local:4000"
 		SECONDARYNAME = "arm64-mosquitto"
 		BASETYPE = "Mosquitto"
 		BASECONTAINER = "-empty-"
