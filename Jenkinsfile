@@ -23,13 +23,6 @@ pipeline {
 			).trim()}"""
 		SOFTWARESTRING = "<<MOSQUITTOVERSION>>"
 		TARGETVERSION = "${SOFTWAREVERSION}"
-//		TARGETVERSION = """${sh(
-//			returnStdout: true,
-//			script: ''
-//			)}"""
-//		TARGETSTRING = "NEXTCLOUD_VERSION"
-//		COMMANDSHELL = "/bin/bash"
-//		TARGETCOMMAND = 'socat -V | grep "socat version" | sed s/"^socat version "// | sed s/" on .*$"//'
         }
         stages {
                 stage('Build') {
