@@ -28,8 +28,19 @@ pipeline {
         }
         stages {
                 stage('Build') {
+			environment {
+			    ACTION = "build"
+			}
                         steps {
-                                sh './build.sh'
+                                sh './action.sh'
+                        }
+                }
+                stage('Push') {
+			environment {
+			    ACTION = "push"
+			}
+                        steps {
+                                sh './action.sh'
                         }
                 }
         }
