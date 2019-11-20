@@ -27,7 +27,7 @@ if [ -z "${TARGETVERSION}" ]; then
  fi
 fi
 
-if [ "${ACTION}" == "build" ]; then
+if [ "${ACTION}" == "build" ] || [ "${ACTION}" == "all" ]; then
 # Start of action "build"
   if [ -n "${BASECONTAINER}" ]; then
     if [ -z "${BASETYPE}" ]; then
@@ -36,7 +36,7 @@ if [ "${ACTION}" == "build" ]; then
       if [ -f "Dockerfile.${BASETYPE}" ]; then
         cp "Dockerfile.${BASETYPE}" "Dockerfile.${NAME}"
         DOCKERFILE="Dockerfile.${NAME}"
-        sed -i s/"<<BASECONTAINER>>"/"${BASECONTAINER}"/g "${DOCKERFILE}"
+        sed -i s~"<<BASECONTAINER>>"~"${BASECONTAINER}"~g "${DOCKERFILE}"
       else
         exit 5
       fi
@@ -51,14 +51,14 @@ if [ "${ACTION}" == "build" ]; then
   fi
 
   if [ -n "${SOFTWAREVERSION}" ] && [ -n "${SOFTWARESTRING}" ]; then
-    sed -i s/"${SOFTWARESTRING}"/"${SOFTWAREVERSION}"/g "${DOCKERFILE}"
+    sed -i s~"${SOFTWARESTRING}"~"${SOFTWAREVERSION}"~g "${DOCKERFILE}"
   fi
 
   docker pull `grep "^FROM " "${DOCKERFILE}" | cut -d" " -f2` && \
   docker build --no-cache --rm -t ${REGISTRY}/${NAME}:latest --file "${DOCKERFILE}" .
 
 # End of action "build"
-elif [ "${ACTION}" == "push" ]; then
+elif [ "${ACTION}" == "push" ] || [ "${ACTION}" == "all" ]; then
 # Start of action "push"
 
   if [ -n "${TARGETRUNVERSION}" ]; then
