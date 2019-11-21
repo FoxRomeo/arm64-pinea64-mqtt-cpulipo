@@ -35,7 +35,7 @@ pipeline {
 			    ACTION = "build"
 			}
                         steps {
-                                sh './action.sh'
+                                sh 'bash -x ./action.sh'
                         }
                 }
                 stage('Push') {
