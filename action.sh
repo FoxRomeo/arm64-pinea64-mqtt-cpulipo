@@ -2,14 +2,16 @@
 
 # Errors:
 #  1 REGISTRY not set
-#  2 TARGETVERSION AND STRING AND COMMAND not set (one must be set)
+#  2 TARGETVERSION AND STRING AND COMMAND not set AND OVERRIDE still set to latest (one must be set)
 #  3 TARGETVERSION not found (must be found with inspect with TARGETSTRING)
 #  4 BASECONTAINER set, but not BASETYPE
 #  5 "Dockerfile.${BASETYPE}" not found
 #  6 TARGETBATCH result was empty
-#  7 no ACTION type is set
+#  7 no ACTION type is set (build, push, all)
 
-set -x
+if [ -n "${OVERRIDE}" ]; then
+  echo ":${OVERRIDE}:"
+fi
 
 if [ -z "${NAME}" ]; then
   NAME="${PWD##*/}"
@@ -19,12 +21,16 @@ if [ -z "${REGISTRY}" ]; then
   exit 1
 fi
 
-if [ -z "${TARGETVERSION}" ]; then
- if [ -z "${TARGETSTRING}" ]; then
-   if [ -z "${TARGETRUNVERSION}" ]; then
-    exit 2
-   fi
- fi
+if [ "${OVERRIDE}" != "latest" ] && [ -n "${SOFTWARESTRING}" ]; then
+  SOFTWAREVERSION="${OVERRIDE}"
+fi
+
+if [ "${OVERRIDE}" != "latest" ]; then
+  TARGETVERSION="${OVERRIDE}"
+fi
+
+if [ -z "${TARGETVERSION}" ] && [ -z "${TARGETSTRING}" ] && [ -z "${TARGETRUNVERSION}" ]; then
+  exit 2
 fi
 
 if [ "${ACTION}" == "build" ] || [ "${ACTION}" == "all" ]; then
@@ -61,7 +67,7 @@ if [ "${ACTION}" == "build" ] || [ "${ACTION}" == "all" ]; then
 elif [ "${ACTION}" == "push" ] || [ "${ACTION}" == "all" ]; then
 # Start of action "push"
 
-  if [ -n "${TARGETRUNVERSION}" ]; then
+  if [ -n "${TARGETRUNVERSION}" ] && [ -z "${TARGETVERSION}" ]; then
     TARGETVERSION=`${TARGETRUNVERSION} ${REGISTRY}/${NAME}:latest`
     if [ -z "${TARGETVERSION}" ]; then
       exit 6
