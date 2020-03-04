@@ -6,7 +6,7 @@ pipeline {
 		string(name: 'OVERRIDE', defaultValue: 'latest', description: 'Version to use (leave "latest" to use latest release)', trim: true)
 	}
         triggers {
-                cron('H H(2-7) * * 3')
+                cron('H H(4-12) * * 3')
         }
         options {
                 skipStagesAfterUnstable()
