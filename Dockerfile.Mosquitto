@@ -1,8 +1,6 @@
 FROM multiarch/debian-debootstrap:arm64-buster
 MAINTAINER docker@intrepid.de
 
-#FROM arm64v8/alpine:latest
-
 env MOSQUITTOVERSION <<MOSQUITTOVERSION>>
 env USERID 9002
 
@@ -12,7 +10,7 @@ COPY push-mqtt.sh /opt/push-mqtt.sh
 
 RUN passwd -l root ; \
     apt-get update && \
-    apt-get install -yq bash apt-transport-https curl gnupg && \
+    apt-get install -yq bash apt-transport-https wget gnupg && \
     apt-get install -yq openssl bc build-essential libssl-dev libc-ares-dev libwebsockets-dev && \
     mkdir -p /usr/src ; \
     cd /usr/src && \
@@ -26,7 +24,7 @@ RUN passwd -l root ; \
     make WITH_DOCS=no&& \
     make install && \
     cd / && \
-    apt-get remove -yq build-essential libssl-dev libc-ares-dev libwebsockets-dev && \
+    apt-get remove -yq build-essential libssl-dev libc-ares-dev libwebsockets-dev wget && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/src/* && \
     chmod 755 /opt/push-mqtt.sh

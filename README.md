@@ -1,7 +1,7 @@
 # pinea64-mqtt-cpulipo
 Sends the CPUcore temperature and LiPo battery data of a Pine A64 via MQTT to a broker every minute
 
-    Copyright (C) 2016  Oliver Faßbender
+    Copyright (C) 2016-2020  Oliver Faßbender
 	docker@intrepid.de
 
     This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@ Sends the CPUcore temperature and LiPo battery data of a Pine A64 via MQTT to a 
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 	
-Dockerfile to create a container for raspberry pi
+Dockerfile to create a container for ARM64v8 CPU
 Sends the CPUcore temperature and LiPo battery data of a Pine A64 via MQTT to a broker every minute
 (to be used in OpenHAB for example)
 
@@ -29,14 +29,14 @@ MQTTBASE=<MQTT Base Path>
 MQTTPARAMETER=<other Parameters or empty>
 
 start with:
-docker run -d --restart=unless-stopped --name pinea64-mqtt-cpulipo -h <container-hostname> --env-file <path-to-env-file> intrepidde/pinea64-mqtt-cpulipo:1.1
+docker run -d --restart=unless-stopped --name pinea64-mqtt-cpulipo -h <container-hostname> --env-file <path-to-env-file> intrepidde/pinea64-mqtt-cpulipo:latest
 or
-docker run -d --restart=unless-stopped --name pinea64-mqtt-cpulipo --uts="host" --env-file <path-to-env-file> intrepidde/pinea64-mqtt-cpulipo:1.1
+docker run -d --restart=unless-stopped --name pinea64-mqtt-cpulipo --uts="host" --env-file <path-to-env-file> intrepidde/pinea64-mqtt-cpulipo:latest
 
 Add "-v <local path>:<container path>" to command line (example: "-v /etc/ssl/certs:/etc/ssl/certs"),
 in env file MQTTPARAMETER="--cafile /etc/ssl/certs/<your ca-file> --tls-version tlsv1.1"
 and change port to 8883
 
-based on: armhf/alpine:3.4 using mosquitto_pub
+based on: multiarch/debian-debootstrap:arm64-buster using mosquitto_pub
 
 
