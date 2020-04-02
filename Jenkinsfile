@@ -1,6 +1,6 @@
 pipeline {
         agent {
-                label 'ARM64 && Docker && build-essential'
+                label 'ARM64 && Docker'
         }
 	parameters {
 		string(name: 'OVERRIDE', defaultValue: 'latest', description: 'Version to use (leave "latest" to use latest release)', trim: true)
