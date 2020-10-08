@@ -18,7 +18,7 @@ pipeline {
                 EMAIL_TO = 'olli.jenkins.prometheus@intrepid.de'
                 NAME = "arm64-pinea64-mqtt-cpulipo"
 		SECONDARYREGISTRY = "nexus.intrepid.local:4000"
-		SECONDARYNAME = "arm64-mosquitto"
+		SECONDARYNAME = "arm64-pinea64-mqtt-cpulipo"
 		BASETYPE = "Mosquitto"
 		BASECONTAINER = "-empty-"
 //		SOFTWAREVERSION = "1.6.4"
