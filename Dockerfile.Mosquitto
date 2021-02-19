@@ -10,8 +10,8 @@ COPY push-mqtt.sh /opt/push-mqtt.sh
 
 RUN passwd -l root ; \
     apt-get update && \
-    apt-get install -yq bash apt-transport-https wget gnupg && \
-    apt-get install -yq openssl bc build-essential libssl-dev libc-ares-dev libwebsockets-dev ca-certificates && \
+    apt-get install -yq bash apt-transport-https wget gnupg ca-certificates libcjson1 && \
+    apt-get install -yq openssl bc build-essential libssl-dev libc-ares-dev libwebsockets-dev libcjson-dev && \
     mkdir -p /usr/src ; \
     cd /usr/src && \
     wget https://mosquitto.org/files/source/mosquitto-${MOSQUITTOVERSION}.tar.gz && \
@@ -24,7 +24,7 @@ RUN passwd -l root ; \
     make WITH_DOCS=no&& \
     make install && \
     cd / && \
-    apt-get remove -yq build-essential libssl-dev libc-ares-dev libwebsockets-dev wget && \
+    apt-get remove -yq build-essential libssl-dev libc-ares-dev libwebsockets-dev libcjson-dev wget && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/src/* && \
     chmod 755 /opt/push-mqtt.sh
