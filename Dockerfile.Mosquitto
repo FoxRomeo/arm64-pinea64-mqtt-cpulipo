@@ -1,4 +1,4 @@
-FROM multiarch/debian-debootstrap:arm64-buster
+FROM arm64v8/debian:latest
 MAINTAINER docker@intrepid.de
 
 env MOSQUITTOVERSION <<MOSQUITTOVERSION>>
