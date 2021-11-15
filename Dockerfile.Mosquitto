@@ -1,4 +1,4 @@
-FROM arm64v8/debian:latest
+FROM arm64v8/debian:bullseye
 MAINTAINER docker@intrepid.de
 
 env MOSQUITTOVERSION <<MOSQUITTOVERSION>>
