@@ -19,7 +19,7 @@
 HOSTNAME=`hostname`
 
 while true; do
-  /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/CPUcore $MQTTPARAMETER -m "`cat /sys/class/thermal/thermal_zone0/temp`" &> /dev/null
+  /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/CPUcore $MQTTPARAMETER -m "`echo "scale = 0 ; $(cat /sys/class/thermal/thermal_zone0/temp) / 1000" | bc -l `" &> /dev/null
 
   /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Temp $MQTTPARAMETER -m "`echo $(( $(grep 'POWER_SUPPLY_TEMP' /sys/class/power_supply/battery/uevent | cut -d= -f2 ) / 10 ))`" &> /dev/null
 
