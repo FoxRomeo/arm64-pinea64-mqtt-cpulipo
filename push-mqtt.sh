@@ -19,18 +19,26 @@
 HOSTNAME=`hostname`
 
 while true; do
+  # CPU
   /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/CPUcore $MQTTPARAMETER -m "`echo "scale = 0 ; $(cat /sys/class/thermal/thermal_zone0/temp) / 1000" | bc -l `" &> /dev/null
+  # GPU
+  /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/GPUcore $MQTTPARAMETER -m "`echo "scale = 0 ; $(cat /sys/class/thermal/thermal_zone1/temp) / 1000" | bc -l `" &> /dev/null
 
-  /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Temp $MQTTPARAMETER -m "`echo $(( $(grep 'POWER_SUPPLY_TEMP' /sys/class/power_supply/battery/uevent | cut -d= -f2 ) / 10 ))`" &> /dev/null
+  BAT_PATH=""
+  if [ -d /sys/class/power_supply/battery ]; then
+    BAT_PATH="/sys/class/power_supply/battery"
+  fi
+  if [ -d /sys/class/power_supply/axp20x-battery ]; then
+    BAT_PATH="/sys/class/power_supply/axp20x-battery"
+  fi
 
-  /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Min $MQTTPARAMETER -m "`echo "$(grep 'POWER_SUPPLY_VOLTAGE_MIN_DESIGN' /sys/class/power_supply/battery/uevent | cut -d= -f2 ) / 1000" | bc -l `" &> /dev/null
-
-  /usr/local/bin/mosquitto_pub -h $MQTTBROKER -P $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Max $MQTTPARAMETER -m "`echo "$(grep 'POWER_SUPPLY_VOLTAGE_MAX_DESIGN' /sys/class/power_supply/battery/uevent | cut -d= -f2 ) / 1000000" | bc -l `" &> /dev/null
-
-  /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Volt $MQTTPARAMETER -m "`echo "$(grep 'POWER_SUPPLY_VOLTAGE_NOW' /sys/class/power_supply/battery/uevent | cut -d= -f2 ) / 1000000" | bc -l `" &> /dev/null
-
-  /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Prozent $MQTTPARAMETER -m "`echo $(( $(grep 'POWER_SUPPLY_CAPACITY' /sys/class/power_supply/battery/uevent | cut -d= -f2 ) ))`" &> /dev/null
-
+  if [ -n "$BAT_PATH" ]; then
+    /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Temp $MQTTPARAMETER -m "`echo $(( $(grep 'POWER_SUPPLY_TEMP' $BAT_PATH/uevent | cut -d= -f2 ) / 10 ))`" &> /dev/null
+    /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Min $MQTTPARAMETER -m "`echo "$(grep 'POWER_SUPPLY_VOLTAGE_MIN_DESIGN' $BAT_PATH/uevent | cut -d= -f2 ) / 1000" | bc -l `" &> /dev/null
+    /usr/local/bin/mosquitto_pub -h $MQTTBROKER -P $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Max $MQTTPARAMETER -m "`echo "$(grep 'POWER_SUPPLY_VOLTAGE_MAX_DESIGN' $BAT_PATH/uevent | cut -d= -f2 ) / 1000000" | bc -l `" &> /dev/null
+    /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Volt $MQTTPARAMETER -m "`echo "$(grep 'POWER_SUPPLY_VOLTAGE_NOW' $BAT_PATH/uevent | cut -d= -f2 ) / 1000000" | bc -l `" &> /dev/null
+    /usr/local/bin/mosquitto_pub -h $MQTTBROKER -p $MQTTPORT -i $HOSTNAME -q 1 -t $MQTTBASE/$HOSTNAME/LiPo/Prozent $MQTTPARAMETER -m "`echo $(( $(grep 'POWER_SUPPLY_CAPACITY' $BAT_PATH/uevent | cut -d= -f2 ) ))`" &> /dev/null
+  fi
   sleep 60
 done
 
