@@ -1,30 +1,50 @@
-FROM arm64v8/debian:bullseye
-MAINTAINER docker@intrepid.de
+FROM arm64v8/debian:trixie-slim
 
-env MOSQUITTOVERSION <<MOSQUITTOVERSION>>
-env USERID 9002
+LABEL maintainer="docker@intrepid.de"
+
+ENV MOSQUITTOVERSION=<<MOSQUITTOVERSION>> \
+    USERID=9002
 
 # based on https://github.com/fstehle/docker-rpi-mosquitto
-
 COPY push-mqtt.sh /opt/push-mqtt.sh
 
 RUN passwd -l root ; \
     apt-get update && \
-    apt-get install -yq bash apt-transport-https wget gnupg ca-certificates libcjson1 && \
-    apt-get install -yq openssl bc build-essential libssl-dev libc-ares-dev libwebsockets-dev libcjson-dev && \
+    apt-get install -yq \
+      bash \
+      apt-transport-https \
+      wget \
+      gnupg \
+      ca-certificates \
+      libcjson1 \
+      openssl \
+      bc \
+      build-essential \
+      libssl-dev \
+      libc-ares-dev \
+      libwebsockets-dev \
+      libcjson-dev && \
     mkdir -p /usr/src ; \
     cd /usr/src && \
     wget https://mosquitto.org/files/source/mosquitto-${MOSQUITTOVERSION}.tar.gz && \
     tar xzvf mosquitto-${MOSQUITTOVERSION}.tar.gz && \
+    cd /usr/src/mosquitto-${MOSQUITTOVERSION}/libcommon && \
+    make WITH_DOCS=no && \
     cd /usr/src/mosquitto-${MOSQUITTOVERSION}/lib && \
-    make WITH_DOCS=no&& \
+    make WITH_DOCS=no && \
     make install && \
     ldconfig && \
     cd /usr/src/mosquitto-${MOSQUITTOVERSION}/client && \
-    make WITH_DOCS=no&& \
+    make WITH_DOCS=no && \
     make install && \
     cd / && \
-    apt-get remove -yq build-essential libssl-dev libc-ares-dev libwebsockets-dev libcjson-dev wget && \
+    apt-get remove -yq \
+      build-essential \
+      libssl-dev \
+      libc-ares-dev \
+      libwebsockets-dev \
+      libcjson-dev \
+      wget && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/src/* && \
     chmod 755 /opt/push-mqtt.sh
