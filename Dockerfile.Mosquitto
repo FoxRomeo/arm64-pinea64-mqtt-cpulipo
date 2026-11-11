@@ -53,5 +53,5 @@ RUN passwd -l root ; \
     chmod 755 /opt/push-mqtt.sh
 
 # Run the command on container startup
-CMD /opt/push-mqtt.sh
+CMD ["/opt/push-mqtt.sh"]
 
