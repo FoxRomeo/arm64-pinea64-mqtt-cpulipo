@@ -13,7 +13,8 @@ RUN passwd -l root ; \
     apt-get install -yq \
       bash \
       apt-transport-https \
-      wget \
+      curl \
+#      wget \
       gnupg \
       ca-certificates \
       libcjson1 \
@@ -26,7 +27,8 @@ RUN passwd -l root ; \
       libcjson-dev && \
     mkdir -p /usr/src ; \
     cd /usr/src && \
-    wget https://mosquitto.org/files/source/mosquitto-${MOSQUITTOVERSION}.tar.gz && \
+    curl -fSL --retry 5 --retry-delay 5 --retry-all-errors -o mosquitto-2.1.2.tar.gz https://mosquitto.org/files/source/mosquitto-2.1.2.tar.gz && \
+#    wget --tries=5 --retry-connrefused --waitretry=5 https://mosquitto.org/files/source/mosquitto-${MOSQUITTOVERSION}.tar.gz && \
     tar xzvf mosquitto-${MOSQUITTOVERSION}.tar.gz && \
     cd /usr/src/mosquitto-${MOSQUITTOVERSION}/libcommon && \
     make WITH_DOCS=no && \
@@ -44,7 +46,8 @@ RUN passwd -l root ; \
       libc-ares-dev \
       libwebsockets-dev \
       libcjson-dev \
-      wget && \
+      curl && \
+#      wget && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/src/* && \
     chmod 755 /opt/push-mqtt.sh
